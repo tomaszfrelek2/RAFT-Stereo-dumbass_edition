@@ -37,7 +37,19 @@ class RAFTStereo(nn.Module):
                 nn.Conv2d(128, 256, 3, padding=1))
         else:
             self.fnet = BasicEncoder(output_dim=256, norm_fn='instance', downsample=args.n_downsample)
+    
+    def freeze_parameters(self):
+        """ Freeze specific parameters like fnet and cnet """
+        if hasattr(self, 'fnet'):
+            for param in self.fnet.parameters():
+                param.requires_grad = False
+            print("Feature extractor (fnet) parameters are frozen.")
 
+        if hasattr(self, 'cnet'):
+            for param in self.cnet.parameters():
+                param.requires_grad = False
+            print("Context extractor (cnet) parameters are frozen.")
+            
     def freeze_bn(self):
         for m in self.modules():
             if isinstance(m, nn.BatchNorm2d):
