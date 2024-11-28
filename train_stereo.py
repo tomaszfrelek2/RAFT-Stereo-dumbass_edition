@@ -133,11 +133,7 @@ def train(args):
 
     model = nn.DataParallel(RAFTStereo(args))
     # Freeze feature extractor and context extractor parameters
-    for param in model.module.feature_extractor.parameters():
-        param.requires_grad = False
-
-    for param in model.module.context_extractor.parameters():
-        param.requires_grad = False
+    model.module.freeze_parameters()
     print("Parameter Count: %d" % count_parameters(model))
 
     train_loader = datasets.fetch_dataloader(args)
