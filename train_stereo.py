@@ -132,6 +132,8 @@ class Logger:
 def train(args):
 
     model = nn.DataParallel(RAFTStereo(args))
+    model.module.freeze_parameters()
+
     print("Parameter Count: %d" % count_parameters(model))
 
     train_loader = datasets.fetch_dataloader(args)
